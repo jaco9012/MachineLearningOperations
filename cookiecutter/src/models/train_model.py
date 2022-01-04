@@ -4,8 +4,9 @@ import os
 import torch
 from torch import nn, optim
 from torchvision import datasets
-
-
+import matplotlib.pyplot as plt
+plt.switch_backend('agg')
+from src.data.dataset import mnist
 from models.model import MyAwesomeModel
 
 
@@ -72,18 +73,20 @@ class train(object):
             else:
                 print(f"Training loss: {running_loss/len(trainloader)}")
                 # Append the running_loss for each epoch
-                train_losses.append(running_loss)
+                train_losses.append(running_loss/len(trainloader))
 
         torch.save(model.state_dict(), os.path.join('models/trained_models',args.save_model_to))
 
+        # for plotting
+        x = range(0, (len(train_losses)))
+
+        plt.figure()
+        plt.plot(x, train_losses, label="Training loss")
+        plt.legend(loc="upper center")
+        plt.grid()
+        plt.savefig("reports/figures/training_loss.png")
+
 if __name__ == '__main__':
     train()
-    
-    
-    
-    
-    
-    
-    
     
     
