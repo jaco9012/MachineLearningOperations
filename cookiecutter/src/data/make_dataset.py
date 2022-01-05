@@ -24,7 +24,7 @@ def main(input_filepath, output_filepath):
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
     
-    train_images = torch.empty((0,784))
+    train_images = torch.empty((0,28, 28))
     train_labels = torch.empty((0,), dtype=torch.int64)
 
     for np_name in glob.glob(os.path.join(input_filepath,'*.npz')):
@@ -33,7 +33,7 @@ def main(input_filepath, output_filepath):
         mean_new_images = torch.mean(new_images, dim=(1,2), keepdim=True)
         sd_new_images = torch.std(new_images,dim=(1,2), keepdim=True)
         new_images = transforms.Normalize(mean_new_images, sd_new_images)(new_images)
-        new_images = torch.flatten(new_images, start_dim=1)
+        # new_images = torch.flatten(new_images, start_dim=1)
         new_labels = torch.LongTensor(tmp_data["labels"])
 
         if np_name == os.path.join(input_filepath,'test.npz'):

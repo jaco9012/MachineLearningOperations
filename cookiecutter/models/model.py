@@ -1,27 +1,29 @@
 import torch.nn.functional as F
 from torch import nn
 
-class MyAwesomeModel(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.fc1 = nn.Linear(784, 256)
-        self.fc2 = nn.Linear(256, 128)
-        self.fc3 = nn.Linear(128, 64)
-        self.fc4 = nn.Linear(64, 10)
+def orthogonal_init(module, gain=nn.init.calculate_gain('relu')):
+	if isinstance(module, nn.Linear) or isinstance(module, nn.Conv2d):
+		nn.init.orthogonal_(module.weight.data, gain)
+		nn.init.constant_(module.bias.data, 0)
+	return module
 
-        # Dropout module with 0.2 drop probability
-        self.dropout = nn.Dropout(p=0.2)
+class Flatten(nn.Module):
+    def forward(self, x):
+        return x.view(x.size(0), -1)
+
+class MyAwesomeModel(nn.Module):
+    def __init__(self, in_channels=1, feature_dim=10):
+        super().__init__()
+        self.layers = nn.Sequential(
+            nn.Conv2d(in_channels=in_channels, out_channels=3, kernel_size=5, stride=1), nn.ReLU(),
+            nn.Conv2d(in_channels=3, out_channels=8, kernel_size=5, stride=1), nn.ReLU(),
+            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=5, stride=1), nn.ReLU(),
+            Flatten(),
+            nn.Linear(in_features=4096, out_features=1024), nn.ReLU(),
+            nn.Linear(in_features=1024, out_features=feature_dim) 
+        )
+        self.apply(orthogonal_init)
 
     def forward(self, x):
-        # make sure input tensor is flattened
-        x = x.view(x.shape[0], -1)
-
-        # Now with dropout
-        x = self.dropout(F.relu(self.fc1(x)))
-        x = self.dropout(F.relu(self.fc2(x)))
-        x = self.dropout(F.relu(self.fc3(x)))
-
-        # output so no dropout here
-        x = F.log_softmax(self.fc4(x), dim=1)
-
-        return x
+        x = x[:,None,:,:]
+        return F.log_softmax(self.layers(x), dim=1)
