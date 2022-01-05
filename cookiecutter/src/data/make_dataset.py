@@ -4,6 +4,7 @@ import logging
 import os
 import glob
 import torch
+from torchvision import transforms
 import numpy as np
 from pathlib import Path
 from torch.nn.functional import normalize
@@ -29,11 +30,13 @@ def main(input_filepath, output_filepath):
     for np_name in glob.glob(os.path.join(input_filepath,'*.npz')):
         tmp_data = np.load(np_name)
         new_images = torch.FloatTensor(tmp_data["images"])
+        mean_new_images = torch.mean(new_images, dim=(1,2), keepdim=True)
+        sd_new_images = torch.std(new_images,dim=(1,2), keepdim=True)
+        new_images = transforms.Normalize(mean_new_images, sd_new_images)(new_images)
         new_images = torch.flatten(new_images, start_dim=1)
         new_labels = torch.LongTensor(tmp_data["labels"])
 
         if np_name == os.path.join(input_filepath,'test.npz'):
-            new_images = normalize(new_images, p=1.0, dim=1)
             torch.save(new_images,os.path.join(output_filepath, 'test_images.pt'))
             torch.save(new_labels,os.path.join(output_filepath, 'test_labels.pt'))
             pass
@@ -41,7 +44,6 @@ def main(input_filepath, output_filepath):
             train_images = torch.cat((train_images, new_images))
             train_labels = torch.cat((train_labels, new_labels))
     else:
-        train_images = normalize(new_images, p=1.0, dim=1)
         torch.save(train_images,os.path.join(output_filepath, 'train_images.pt'))
         torch.save(train_labels,os.path.join(output_filepath, 'train_labels.pt'))       
 
