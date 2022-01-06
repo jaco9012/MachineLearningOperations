@@ -2,6 +2,7 @@ import argparse
 import sys
 import os
 import torch
+import wandb
 from torch import nn, optim
 from torchvision import datasets
 import matplotlib.pyplot as plt
@@ -9,6 +10,7 @@ plt.switch_backend('agg')
 from src.data.dataset import mnist
 from models.model import MyAwesomeModel
 
+wandb.init(project="my-test-project-cookiecutter", entity="jaco9012")
 
 class train(object):
     """ Helper class that will help launch class methods as commands
@@ -74,6 +76,7 @@ class train(object):
                 print(f"Training loss: {running_loss/len(trainloader)}")
                 # Append the running_loss for each epoch
                 train_losses.append(running_loss/len(trainloader))
+                wandb.log({"loss": running_loss/len(trainloader)})
 
         torch.save(model.state_dict(), os.path.join('models/trained_models',args.save_model_to))
 
@@ -85,6 +88,8 @@ class train(object):
         plt.legend(loc="upper center")
         plt.grid()
         plt.savefig("reports/figures/training_loss.png")
+
+        wandb.log({"Train loss": plt})
 
 if __name__ == '__main__':
     train()

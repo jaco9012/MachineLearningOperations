@@ -1,0 +1,1 @@
+{"loss": 0.030575467804551767, "_runtime": 138, "_timestamp": 1641479794, "_step": 5, "Train loss": {"_type": "plotly-file", "path": "media/plotly/Train loss_5_a772310a9cab81f085e4.plotly.json", "sha256": "a772310a9cab81f085e4ac979054f0040e103f552356dee77cb22674926a0ce7", "size": 9049}, "_wandb": {"runtime": 139}}

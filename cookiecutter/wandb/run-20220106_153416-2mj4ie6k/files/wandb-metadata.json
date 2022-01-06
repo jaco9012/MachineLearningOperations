@@ -1,0 +1,24 @@
+{
+    "os": "Linux-5.10.16.3-microsoft-standard-WSL2-x86_64-with-debian-bullseye-sid",
+    "python": "3.7.0",
+    "heartbeatAt": "2022-01-06T14:34:17.784408",
+    "startedAt": "2022-01-06T14:34:16.241960",
+    "docker": null,
+    "cpu_count": 6,
+    "cuda": null,
+    "args": [
+        "train"
+    ],
+    "state": "running",
+    "program": "src/models/train_model.py",
+    "codePath": "cookiecutter/src/models/train_model.py",
+    "git": {
+        "remote": "https://github.com/jaco9012/MachineLearningOperations.git",
+        "commit": "3451a00a0d1fa72b2fd7212710cf3fdb1cbbb28c"
+    },
+    "email": "jacob.bahnsen.schmidt@gmail.com",
+    "root": "/mnt/c/Users/jacob/OneDrive/Dokumenter/DTU/Machine Learning Operations/PersonalChanges/MachineLearningOperations",
+    "host": "Rainbow-Puke-PC",
+    "username": "jaco9012",
+    "executable": "/home/jaco9012/anaconda3/bin/python3"
+}
