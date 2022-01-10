@@ -1,5 +1,6 @@
 import torch
 import os
+import pytest
 from src.data.dataset import mnist
 
 
