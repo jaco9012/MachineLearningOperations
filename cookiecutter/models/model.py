@@ -25,9 +25,9 @@ class MyAwesomeModel(nn.Module):
         #self.apply(orthogonal_init)
 
     def forward(self, x):
-        if x.ndim != 4:
+        if x.ndim != 3:
             raise ValueError('Expected input to a 3D tensor')
         x = x[:,None,:,:]
-        if x.shape[1] != 1 or x.shape[2] != 28 or x.shape[3]:
+        if x.shape[0] != 1 or x.shape[2] != 28 or x.shape[3] != 28:
             raise ValueError('Expected each sample to have shape [1, 28, 28]')
         return F.log_softmax(self.layers(x), dim=1)
